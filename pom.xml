@@ -1,16 +1,20 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" 
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.lychie</groupId>
-  <artifactId>squirrel</artifactId>
-  <version>1.0.0</version>
-  <name>squirrel</name>
-  <url>http://maven.apache.org</url>
+  <artifactId>squirrel-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0.GA</version>
+  <name>squirrel-parent</name>
   <properties>
+    <project.encoding>UTF-8</project.encoding>
     <spring.version>3.0.5.RELEASE</spring.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <modules>
+    <module>src</module>
+    <module>samples</module>
+  </modules>
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -32,22 +36,25 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.17</version>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
   <build>
-    <finalName>pytravel</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <encoding>${project.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
+          <encoding>${project.encoding}</encoding>
         </configuration>
       </plugin>
     </plugins>
