@@ -1,5 +1,9 @@
 package org.squirrel;
-
+/**
+ * SQL模型
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class SQLModel {
 	
 	private String sql;

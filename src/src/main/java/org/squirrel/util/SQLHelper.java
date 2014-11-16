@@ -7,7 +7,11 @@ import java.util.List;
 import org.squirrel.SQLModel;
 import org.squirrel.annotation.INCREMENT;
 import org.squirrel.annotation.UUID;
-
+/**
+ * SQL助手类
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class SQLHelper {
 
 	public static final int PK_NAME  = 0;

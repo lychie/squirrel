@@ -1,5 +1,9 @@
 package org.squirrel;
-
+/**
+ * 逻辑条件SQL
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class LogicalCriterion implements Criterion {
 
 	private Criterion lc;

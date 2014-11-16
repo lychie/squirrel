@@ -1,5 +1,9 @@
 package org.squirrel;
-
+/**
+ * 排序
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class Order {
 
 	private String statement;

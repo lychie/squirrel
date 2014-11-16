@@ -2,7 +2,11 @@ package org.squirrel;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-
+/**
+ * 异常类, 包装真实异常对象, 自身从不抛出
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class UnexpectedException extends RuntimeException {
 	
 	private Throwable throwable;
