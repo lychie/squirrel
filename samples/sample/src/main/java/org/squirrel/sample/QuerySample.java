@@ -43,7 +43,8 @@ public class QuerySample {
 	 */
 	@Test
 	public void simplifyQuery() {
-		Query query = new Query(Emp.class).where("salary < ?", 5000).orderBy("salary, id ASC");
+		Query query = new Query(Emp.class).where("salary < ?", 5000)
+			  .orderBy("salary, id ASC");
 		List<Emp> emps = session.queryList(query);
 		Testing.printlnObject(emps);
 	}
@@ -54,7 +55,7 @@ public class QuerySample {
 	@Test
 	public void joinQuery() {
 		Query query = new Query().select("e.*, d.name AS deptName")
-			  .from("emp e left join dept d on e.deptId = d.id")
+			  .from("Emp e LEFT JOIN dept d ON e.deptId = d.id")
 			  .orderBy("e.id ASC");
 		ResultSet rs = session.queryResultSet(query);
 		while(rs.hasNext())
@@ -67,12 +68,13 @@ public class QuerySample {
 	@Test
 	public void paginateQuery() {
 		Query query = new Query().select("e.*, d.name AS deptName")
-			  .from("emp e left join dept d on e.deptId = d.id")
+			  .from("Emp e LEFT JOIN dept d ON e.deptId = d.id")
 			  .orderBy("e.id ASC")
 			  .pagination(2, 5); // 从第2页开始, 每页5条记录, 即 6-10.
 		Pagination pagination = session.queryPage(query);
-		while(pagination.getResultSet().hasNext())
-			print(pagination.getResultSet().next());
+		ResultSet rs = pagination.getResultSet();
+		while(rs.hasNext())
+			print(rs.next());
 	}
 	
 	private void print(Map<String, Object> map) {

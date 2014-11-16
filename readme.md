@@ -21,6 +21,8 @@
 
 *注：Hibernate 有冬眠之意，Squirrel ( 松鼠 ) 具有冬眠的习性，项目中众多类名称沿袭自 Hibernate，如 Criteria、Criterion、Restrictions 等。*
 
+----------
+
 ## Query ##
 
 ```java
@@ -50,7 +52,8 @@ public void simpleQuery() {
  */
 @Test
 public void simplifyQuery() {
-	Query query = new Query(Emp.class).where("salary < ?", 5000).orderBy("salary, id ASC");
+	Query query = new Query(Emp.class).where("salary < ?", 5000)
+		  .orderBy("salary, id ASC");
 	List<Emp> emps = session.queryList(query);
 	Testing.printlnObject(emps);
 }
@@ -61,7 +64,7 @@ public void simplifyQuery() {
 @Test
 public void joinQuery() {
 	Query query = new Query().select("e.*, d.name AS deptName")
-		  .from("emp e left join dept d on e.deptId = d.id")
+		  .from("Emp e LEFT JOIN dept d ON e.deptId = d.id")
 		  .orderBy("e.id ASC");
 	ResultSet rs = session.queryResultSet(query);
 	while(rs.hasNext())
@@ -74,17 +77,85 @@ public void joinQuery() {
 @Test
 public void paginateQuery() {
 	Query query = new Query().select("e.*, d.name AS deptName")
-		  .from("emp e left join dept d on e.deptId = d.id")
+		  .from("Emp e LEFT JOIN dept d ON e.deptId = d.id")
 		  .orderBy("e.id ASC")
 		  .pagination(2, 5); // 从第2页开始, 每页5条记录, 即 6-10.
 	Pagination pagination = session.queryPage(query);
-	while(pagination.getResultSet().hasNext())
-		print(pagination.getResultSet().next());
+	ResultSet rs = pagination.getResultSet();
+	while(rs.hasNext())
+		print(rs.next());
 }
 
 private void print(Map<String, Object> map) {
 	for(String key : map.keySet())
 		System.out.print(map.get(key) + "\t");
 	System.out.println();
+}
+```
+
+----------
+
+## Criteria ##
+
+```java
+/**
+ * 简单查询
+ * 等价于 QuerySample.simpleQuery、QuerySample.simplifyQuery
+ */
+@Test
+public void simpleCriteria() {
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(
+		Restrictions.lt("salary", 5000)
+	).add(Order.by("salary, id ASC"));
+	List<Emp> emps = session.queryList(criteria);
+	Testing.printlnObject(emps);
+}
+
+/**
+ * A AND B 模式, A OR B 模式类似 ( Restrictions.or )
+ */
+@Test
+public void A_AND_B() {
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(
+		Restrictions.and(
+			Restrictions.lt("salary", 5000),
+			Restrictions.eq("sex", "女")
+		)
+	).add(Order.by("salary, id ASC"));
+	List<Emp> emps = session.queryList(criteria);
+	Testing.printlnObject(emps);
+}
+
+/**
+ * (A or B) and C 模式, 其余的拼法类似 ...
+ */
+@Test
+public void A_OR_B_AND_C() {
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	Criterion criterion = Restrictions.or(
+		Restrictions.eq("deptId", 3),
+		Restrictions.eq("deptId", 4)
+	);
+	criteria.add(
+		Restrictions.and(
+			criterion,
+			Restrictions.le("sex", "女")
+		)
+	);
+	List<Emp> emps = session.queryList(criteria);
+	Testing.printlnObject(emps);
+}
+
+/**
+ * 模糊查询
+ */
+@Test
+public void like() {
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(Restrictions.like("name", "%文%"));
+	List<Emp> emps = session.queryList(criteria);
+	Testing.printlnObject(emps);
 }
 ```
