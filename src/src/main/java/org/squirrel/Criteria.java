@@ -24,7 +24,7 @@ public class Criteria {
 		return this;
 	}
 
-	public String toSQLString() {
+	String toSQLString() {
 		StringBuilder sql = new StringBuilder(query.toSQLString());
 		if(sqlStatement != null)
 			sql.append(" WHERE ").append(sqlStatement);
@@ -48,11 +48,7 @@ public class Criteria {
 	}
 
 	Object[] params() {
-		int length = params.size();
-		Object[] values = new Object[length];
-		for(int i = 0; i < length; i++)
-			values[i] = params.get(i);
-		return values;
+		return params.toArray();
 	}
 	
 	String build(boolean build){

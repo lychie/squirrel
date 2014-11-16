@@ -3,12 +3,12 @@ package org.squirrel;
 public class Query {
 
 	private String table;
-	private Column column;
 	private String columns;
 	private String sqlWhere;
 	private Object[] params;
 	private Class<?> entityClass;
 	private Order order;
+	private Pagination page;
 
 	public Query() {}
 
@@ -18,11 +18,6 @@ public class Query {
 
 	public Query select(String columns) {
 		this.columns = columns;
-		return this;
-	}
-
-	public Query select(Column column) {
-		this.column = column;
 		return this;
 	}
 
@@ -55,6 +50,19 @@ public class Query {
 	public Criteria createCriteria() {
 		return new Criteria(this);
 	}
+	
+	public Query pagination(Integer currentPage) {
+		return pagination(currentPage, Pagination.DEFAULT_PAGE_SIZE);
+	}
+	
+	public Query pagination(Integer currentPage, Integer pageItems) {
+		page = new Pagination(currentPage, pageItems);
+		return this;
+	}
+	
+	Pagination page() {
+		return page;
+	}
 
 	Class<?> getEntityClass() {
 		return entityClass;
@@ -62,7 +70,6 @@ public class Query {
 
 	String toSQLString() {
 		columns = columns == null ? "*" : columns;
-		columns = column == null ? columns : column.from(entityClass).toCode();
 		table = table == null ? entityClass.getSimpleName() : table;
 		return new StringBuilder("SELECT ").append(columns).append(" FROM ").append(table).toString();
 	}

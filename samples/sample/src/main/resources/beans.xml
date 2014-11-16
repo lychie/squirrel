@@ -23,7 +23,8 @@
   
   <bean class="org.squirrel.Session">
     <property name="dataSource" ref="dataSource" />
-    <property name="showSQL" value="true" />
+    <property name="dialect" value="${jdbc.dialect}" />
+    <property name="showSQL" value="${jdbc.showSQL}" />
   </bean>
   
 </beans>

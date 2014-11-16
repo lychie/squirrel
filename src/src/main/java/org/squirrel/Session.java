@@ -5,18 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.squirrel.dialect.Dialect;
+import org.squirrel.dialect.DialectFactory;
 import org.squirrel.util.SQLHelper;
 
 public class Session {
 
 	private boolean showSQL;
+	private Dialect dialect;
 	private JdbcTemplate jdbcTemplate;
 	
 	public <E> E get(Class<E> entityClass, Object id) {
@@ -48,6 +50,14 @@ public class Session {
 		}
 	}
 	
+	public int update(String sql, Object... params) {
+		try {
+			return jdbcTemplate.update(build(sql), params);
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
 	public int delete(Object entity) {
 		try {
 			SQLModel sql = SQLHelper.generateDeleteSQL(entity);
@@ -61,6 +71,14 @@ public class Session {
 		try {
 			SQLModel sql = SQLHelper.generateDeleteSQL(entityClass, id);
 			return jdbcTemplate.update(sql.build(showSQL), sql.params());
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public int delete(String sql, Object... params) {
+		try {
+			return jdbcTemplate.update(build(sql), params);
 		} catch (Throwable e) {
 			throw new UnexpectedException(e);
 		}
@@ -225,8 +243,81 @@ public class Session {
 		}
 	}
 	
-	public List<Map<String, Object>> queryRawList(final Query query) {
-		return jdbcTemplate.query(query.build(showSQL), query.params(), new ColumnMapRowMapper());
+	public <E> List<E> queryList(Class<E> entityClass, String sql, Object... params) {
+		try {
+			return jdbcTemplate.query(build(sql), params, mapper(entityClass));
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public <E> E queryObject(Class<E> entityClass, String sql, Object... params) {
+		try {
+			return jdbcTemplate.queryForObject(build(sql), params, mapper(entityClass));
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public Pagination queryPage(final Query query) {
+		Pagination page = query.page();
+		page.setTotalAmount(getCounts(query));
+		String sql = dialect.pagination(query).build(showSQL);
+		List<Map<String, Object>> result = jdbcTemplate.query(sql, query.params(), new ColumnMapRowMapper());
+		page.setResultSet(new ResultSet(result));
+		return page;
+	}
+	
+	public Pagination queryPage(final Criteria criteria) {
+		Pagination page = criteria.getQuery().page();
+		page.setTotalAmount(getCounts(criteria));
+		String sql = dialect.pagination(criteria).build(showSQL);
+		List<Map<String, Object>> result = jdbcTemplate.query(sql, criteria.params(), new ColumnMapRowMapper());
+		page.setResultSet(new ResultSet(result));
+		return page;
+	}
+	
+	public ResultSet queryResultSet(final Query query) {
+		try {
+			List<Map<String, Object>> result = jdbcTemplate.query(query.build(showSQL), query.params(), new ColumnMapRowMapper());
+			return new ResultSet(result);
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public ResultSet queryResultSet(final Criteria criteria) {
+		try {
+			List<Map<String, Object>> result = jdbcTemplate.query(criteria.build(showSQL), criteria.params(), new ColumnMapRowMapper());
+			return new ResultSet(result);
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public ResultSet queryResultSet(String sql, Object... params) {
+		try {
+			List<Map<String, Object>> result = jdbcTemplate.query(build(sql), params, new ColumnMapRowMapper());
+			return new ResultSet(result);
+		} catch (Throwable e) {
+			throw new UnexpectedException(e);
+		}
+	}
+	
+	public int getCounts(final Query query) {
+		String sql = query.toQuerySQLString();
+		sql = "SELECT COUNT(*)" + sql.substring(sql.indexOf(" FROM "));
+		return getCounts(sql, query.params());
+	}
+	
+	public int getCounts(final Criteria criteria) {
+		String sql = criteria.toSQLString();
+		sql = "SELECT COUNT(*)" + sql.substring(sql.indexOf(" FROM "));
+		return getCounts(sql, criteria.params());
+	}
+	
+	public int getCounts(String sql, Object... params) {
+		return jdbcTemplate.queryForInt(build(sql), params);
 	}
 
 	public void setDataSource(DataSource dataSource) {
@@ -239,6 +330,16 @@ public class Session {
 	
 	private <E> RowMapper<E> mapper(Class<E> entityClass){
 		return new BeanPropertyRowMapper<E>(entityClass);
+	}
+
+	public void setDialect(String dialect) {
+		this.dialect = DialectFactory.getDialect(dialect);
+	}
+	
+	private String build(String sql) {
+		if(showSQL)
+			System.out.println(sql);
+		return sql;
 	}
 	
 }

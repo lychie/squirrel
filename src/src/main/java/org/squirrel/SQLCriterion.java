@@ -22,8 +22,4 @@ public class SQLCriterion implements Criterion {
 		return sql;
 	}
 
-//	Object[] getParams() {
-//		return params;
-//	}
-
 }
