@@ -7,7 +7,7 @@ classes/
 # ignore target directory
 target/
 
-# ignore eclipse config files
+# ignore eclipse ide config files
 .project
 .classpath
 .settings/
