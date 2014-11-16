@@ -5,26 +5,26 @@ import java.text.SimpleDateFormat;
 
 public class Emp extends Model {
 
-	private int deptId;
-	private int salary;
-	private String job;
-	private String sex;
 	private String name;
+	private String sex;
+	private String job;
+	private Integer salary;
+	private Integer deptId;
 	private Date hiredate;
 
-	public int getDeptId() {
+	public Integer getDeptId() {
 		return deptId;
 	}
 
-	public void setDeptId(int deptId) {
+	public void setDeptId(Integer deptId) {
 		this.deptId = deptId;
 	}
 
-	public int getSalary() {
+	public Integer getSalary() {
 		return salary;
 	}
 
-	public void setSalary(int salary) {
+	public void setSalary(Integer salary) {
 		this.salary = salary;
 	}
 

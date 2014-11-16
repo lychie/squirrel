@@ -4,13 +4,13 @@ import org.squirrel.annotation.INCREMENT;
 
 public abstract class Model {
 
-	protected @INCREMENT int id;
+	protected @INCREMENT Integer id;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
