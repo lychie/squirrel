@@ -159,3 +159,97 @@ public void like() {
 	Testing.printlnObject(emps);
 }
 ```
+
+## Other ##
+
+```java
+/**
+ * 保存
+ */
+@Test
+public void save(){
+	Emp emp = new Emp();
+	emp.setDeptId(3);
+	emp.setHiredate(new Date());
+	emp.setJob("人事专员");
+	emp.setName("小春子");
+	emp.setSalary(4000);
+	emp.setSex("男");
+	int result = session.save(emp);
+	Testing.printlnObject(result == 1 ? "保存成功" : "保存失败");
+}
+
+/**
+ * 更新
+ */
+@Test
+public void update(){
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(Restrictions.eq("name", "小春子"));
+	Emp emp = session.queryObject(criteria);
+	emp.setSalary(emp.getSalary() + 1000);
+	int result = session.update(emp);
+	Testing.printlnObject(result == 1 ? "更新成功" : "更新失败");
+}
+
+/**
+ * 删除
+ */
+@Test
+public void delete(){
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(Restrictions.eq("name", "小春子"));
+	Emp emp = session.queryObject(criteria);
+	int result = session.delete(emp);
+	Testing.printlnObject(result == 1 ? "删除成功" : "删除失败");
+}
+
+/**
+ * 批量保存
+ */
+@Test
+public void batchInsert() {
+	List<Emp> emps = new ArrayList<Emp>();
+	final int count = 10;
+	int deptId = 3;
+	Date hiredate = new Date();
+	for(int i = 0; i < count; i++){
+		Emp emp = new Emp();
+		emp.setDeptId(deptId);
+		emp.setHiredate(hiredate);
+		emp.setJob("人事专员");
+		emp.setName("小春子-" + (i + 1));
+		emp.setSalary(4000 + i);
+		emp.setSex("男");
+		emps.add(emp);
+	}
+	int[] results = session.batchInsert(emps);
+	Testing.printlnObject(Arrays.toString(results));
+}
+
+/**
+ * 批量更新
+ */
+@Test
+public void batchUpdate(){
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(Restrictions.like("name", "小春子%"));
+	List<Emp> emps = session.queryList(criteria);
+	for(Emp emp : emps)
+		emp.setSalary(emp.getSalary() + 1000);
+	int[] results = session.batchUpdate(emps);
+	Testing.printlnObject(Arrays.toString(results));
+}
+
+/**
+ * 批量删除
+ */
+@Test
+public void batchDelete(){
+	Criteria criteria = new Query(Emp.class).createCriteria();
+	criteria.add(Restrictions.like("name", "小春子%"));
+	List<Emp> emps = session.queryList(criteria);
+	int[] results = session.batchDelete(emps);
+	Testing.printlnObject(Arrays.toString(results));
+}
+```
