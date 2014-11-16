@@ -1,7 +1,11 @@
 package org.squirrel;
 
 import java.util.LinkedList;
-
+/**
+ * SQL条件查询
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class Criteria {
 
 	private Query query;
@@ -14,11 +18,17 @@ public class Criteria {
 		this.params = new LinkedList<Object>();
 	}
 	
+	/**
+	 * <des> 添加条件 </des>
+	 */
 	public Criteria add(Criterion criterion) {
 		setContext(criterion);
 		return this;
 	}
 	
+	/**
+	 * <des> 添加排序 </des>
+	 */
 	public Criteria add(Order order) {
 		this.order = order;
 		return this;

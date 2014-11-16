@@ -3,7 +3,11 @@ package org.squirrel.dialect;
 import org.squirrel.Criteria;
 import org.squirrel.Pagination;
 import org.squirrel.Query;
-
+/**
+ * SQL方言
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public abstract class Dialect {
 	protected String sql;
 	

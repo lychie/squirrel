@@ -1,7 +1,11 @@
 package org.squirrel.dialect;
 
 import org.squirrel.MySQLDialect;
-
+/**
+ * SQL方言工厂
+ * @author Lychie Fan ( lychie@yeah.net )
+ * @since 1.0.0
+ */
 public class DialectFactory {
 
 	private DialectFactory() {}

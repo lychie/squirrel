@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import org.squirrel.UnexpectedException;
 /**
- * 反射相关的字段域的常用的操作的工具类
+ * Bean工具类
  * @author Lychie Fan ( lychie@yeah.net )
  * @since 1.0.0
  */
