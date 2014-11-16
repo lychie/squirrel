@@ -1,9 +1,23 @@
-## 核心类 ##
+## 常用类 ##
 
-* **Session**
-* **Query**
-* **Criteria**
-* **Restrictions**
+* **会话**  
+**|— Session**
+
+* **查询**  
+**|— Query**  
+**|— Criteria**  
+**|— Restrictions**  
+**|— ResultSet**
+
+* **排序**  
+**|— Order**
+
+* **分页**  
+**|— Pagination**
+
+* **主键策略**  
+**|— UUID**  
+**|— INCREMENT**
 
 *注：Hibernate 有冬眠之意，Squirrel ( 松鼠 ) 具有冬眠的习性，项目中众多类名称沿袭自 Hibernate，如 Criteria、Criterion、Restrictions 等。*
 

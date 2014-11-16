@@ -68,7 +68,7 @@ public class Restrictions {
 	} 
 	
 	public static SQLCriterion like(String propertyName, Object value){
-		return new SQLCriterion(propertyName + " LIKE '?'", new Object[]{value});
+		return new SQLCriterion(propertyName + " LIKE ?", new Object[]{value});
 	}
 	
 	public static SQLCriterion isEmpty(String propertyName){
@@ -80,11 +80,11 @@ public class Restrictions {
 	}
 	
 	public static SQLCriterion isNull(String propertyName){
-		return eq(propertyName, null);
+		return  new SQLCriterion(propertyName + " IS NULL", null);
 	}
 	
 	public static SQLCriterion isNotNull(String propertyName){
-		return ne(propertyName, null);
+		return new SQLCriterion(propertyName + " IS NOT NULL", null);
 	}
 	
 	public static LogicalCriterion or(Criterion lc, Criterion rc){

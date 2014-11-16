@@ -12,8 +12,9 @@ public class SQLCriterion implements Criterion {
 	
 	@Override
 	public String toSQLString(Criteria criteria) {
-		for(Object param : params)
-			criteria.getParams().add(param);
+		if(params != null)
+			for(Object param : params)
+				criteria.getParams().add(param);
 		return new StringBuilder(criteria.getSqlStatement()).append(toString()).toString();
 	}
 
